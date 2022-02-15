@@ -25,15 +25,52 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $memos = Memo::where('user_id', Auth::id())
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        return view('home', compact('memos'));
     }
 
-    public function create(Request $request) {
+    public function delete(Request $request)
+    {
+        Memo::where('id', $request->id)
+            ->where('user_id', Auth::id())
+            ->delete();
+        return redirect('/home');
+    }
+
+    public function create(Request $request)
+    {
         $memo = new Memo();
         $form = $request->all();
         unset($form['_token']);
         $memo->user_id = Auth::id();
         $memo->fill($form)->save();
         return redirect('/home');
+    }
+
+    public function edit($id)
+    {
+        $memos = Memo::where('user_id', Auth::id())
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $memo = Memo::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        return view('edit', compact('memos', 'memo', 'id'));
+    }
+
+    public function update(Request $request)
+    {
+        $memo = Memo::where('id', $request->id)
+            ->where('user_id', Auth::id())
+            ->first();
+        $form = $request->all();
+        unset($form['_token']);
+        $memo->user_id = Auth::id();
+        $memo->fill($form)->save();
+        return redirect()->route('edit', ['id' => $request->id]);
     }
 }
