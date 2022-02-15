@@ -25,12 +25,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $items = Memo::where('user_id', Auth::id())
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        return view('home', compact('items'));
     }
 
     public function delete(Request $request)
     {
-        Memo::where('id', $request->id)->where('user_id', Auth::id())->delete();
+        Memo::where('id', $request->id)
+            ->where('user_id', Auth::id())
+            ->delete();
         return redirect('/home');
     }
 
@@ -46,7 +51,14 @@ class HomeController extends Controller
 
     public function edit($id)
     {
-        $item = Memo::where('id', $id)->where('user_id', Auth::id())->first();
-        return view('edit', compact('item', 'id'));
+        $items = Memo::where('user_id', Auth::id())
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+        $item = Memo::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+            
+        return view('edit', compact('items','item', 'id'));
     }
 }
