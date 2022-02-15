@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Memo;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -27,6 +29,11 @@ class HomeController extends Controller
     }
 
     public function create(Request $request) {
+        $memo = new Memo();
+        $form = $request->all();
+        unset($form['_token']);
+        $memo->user_id = Auth::id();
+        $memo->fill($form)->save();
         return redirect('/home');
     }
 }
