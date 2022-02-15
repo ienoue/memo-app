@@ -25,10 +25,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $items = Memo::where('user_id', Auth::id())
+        $memos = Memo::where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get();
-        return view('home', compact('items'));
+        return view('home', compact('memos'));
     }
 
     public function delete(Request $request)
@@ -51,26 +51,26 @@ class HomeController extends Controller
 
     public function edit($id)
     {
-        $items = Memo::where('user_id', Auth::id())
+        $memos = Memo::where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        $item = Memo::where('id', $id)
+        $memo = Memo::where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
 
-        return view('edit', compact('items', 'item', 'id'));
+        return view('edit', compact('memos', 'memo', 'id'));
     }
 
     public function update(Request $request)
     {
-        $item = Memo::where('id', $request->id)
+        $memo = Memo::where('id', $request->id)
             ->where('user_id', Auth::id())
             ->first();
         $form = $request->all();
         unset($form['_token']);
-        $item->user_id = Auth::id();
-        $item->fill($form)->save();
+        $memo->user_id = Auth::id();
+        $memo->fill($form)->save();
         return redirect()->route('edit', ['id' => $request->id]);
     }
 }

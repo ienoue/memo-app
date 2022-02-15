@@ -15,7 +15,7 @@
                 @csrf
                 <div class="mb-3">
                     <input type="hidden" name="id" value="{{ $id }}">
-                    <textarea name="content" class="form-control" rows="3" placeholder="テキストを入力して下さい">{{ $item->content }}</textarea>
+                    <textarea name="content" class="form-control" rows="3" placeholder="テキストを入力して下さい">{{ $memo->content }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-primary mb-3">更新</button>
             </form>

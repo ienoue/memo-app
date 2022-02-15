@@ -102,8 +102,8 @@
                             中央パネル
                         </div>
                         <div class="card-body">
-                            @foreach ($items as $item)
-                                <a href="{{ route('edit', ['id' => $item->id]) }}" class="card-text d-block">{{ $item->content }}</a>
+                            @foreach ($memos as $memo)
+                                <a href="{{ route('edit', ['id' => $memo->id]) }}" class="card-text d-block">{{ $memo->content }}</a>
                             @endforeach
                         </div>
                     </div>
