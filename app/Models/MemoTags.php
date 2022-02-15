@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class MemoTags extends Model
 {
     use HasFactory;
+
+    public function memo()
+    {
+        $this->belongsTo(Memo::class);
+    }
+
+    public function tag()
+    {
+        $this->belongsTo(Tag::class);
+    }
 }
