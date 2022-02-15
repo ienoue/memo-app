@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Memo;
+use App\Models\Tag;
+use App\Models\MemoTag;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -41,11 +44,25 @@ class HomeController extends Controller
 
     public function create(Request $request)
     {
-        $memo = new Memo();
-        $form = $request->all();
-        unset($form['_token']);
-        $memo->user_id = Auth::id();
-        $memo->fill($form)->save();
+        DB::transaction(
+            function () use ($request) {
+                $memo = Memo::create([
+                    'user_id' => Auth::id(),
+                    'content' => $request->content,
+                ]);
+
+                $tag = Tag::create([
+                    'user_id' => Auth::id(),
+                    'name' => $request->tag,
+                ]);
+
+                MemoTag::create([
+                    'memo_id' => $memo->id,
+                    'tag_id' => $tag->id,
+                ]);
+
+            }
+        );
         return redirect('/home');
     }
 
@@ -64,6 +81,7 @@ class HomeController extends Controller
 
     public function update(Request $request)
     {
+
         $memo = Memo::where('id', $request->id)
             ->where('user_id', Auth::id())
             ->first();
@@ -71,6 +89,7 @@ class HomeController extends Controller
         unset($form['_token']);
         $memo->user_id = Auth::id();
         $memo->fill($form)->save();
+
         return redirect()->route('edit', ['id' => $request->id]);
     }
 }

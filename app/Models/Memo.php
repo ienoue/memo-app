@@ -13,6 +13,6 @@ class Memo extends Model
 
     public function memoTags()
     {
-        return $this->hasMany(MemoTags::class);
+        return $this->hasMany(MemoTag::class);
     }
 }

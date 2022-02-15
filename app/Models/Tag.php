@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Tag extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $fillable = ['name', 'user_id'];
 
     public function memoTags()
     {
-        return $this->hasMany(MemoTags::class);
+        return $this->hasMany(MemoTag::class);
     }
 }
