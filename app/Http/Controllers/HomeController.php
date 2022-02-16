@@ -58,7 +58,7 @@ class HomeController extends Controller
 
                 $tagName = $request->tag;
                 $tags = $request->tags;
-                // タグIDの配列が文字列なので数値にキャストしておく、タグがチェックされて無ければ新規作成
+                // タグIDの配列が文字列から数値にキャストしておく、タグがチェックされて無ければ新規作成
                 $tags = isset($tags) ? array_map('intval', $request->tags) : [];
                 // フォームにタグが入力されていた場合の処理
                 if (isset($tagName)) {
@@ -88,7 +88,13 @@ class HomeController extends Controller
             ->where('user_id', Auth::id())
             ->first();
 
-        return view('edit', compact('memos', 'memo', 'id'));
+        $tags = Tag::where('user_id', Auth::id())
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $memoTags = $memo->tags()->pluck('id');
+        // dd($memoTags);
+        return view('edit', compact('memos', 'memo', 'id', 'tags', 'memoTags'));
     }
 
     public function update(Request $request)
@@ -102,6 +108,10 @@ class HomeController extends Controller
                 $memo->save();
 
                 $tagName = $request->tag;
+                $tags = $request->tags;
+                // タグIDの配列を文字列から数値にキャストしておく、タグがチェックされて無ければ新規作成
+                $tags = isset($tags) ? array_map('intval', $request->tags) : [];
+                // フォームにタグが入力されていた場合の処理
                 if (isset($tagName)) {
                     $tag = Tag::where('name', $tagName)->first();
                     // タグが未作成のものだった場合の処理
@@ -111,11 +121,9 @@ class HomeController extends Controller
                             'name' => $tagName,
                         ]);
                     }
-                    // tagsテーブルから特定のmemo_idに紐づくidを配列として取得
-                    $ids = $memo->tags()->pluck('id');
-                    $ids->push($tag->id);
-                    $memo->tags()->sync($ids);
+                    $tags[] = $tag->id;
                 }
+                $memo->tags()->sync($tags);
             }
         );
 
