@@ -11,8 +11,8 @@ class Tag extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = ['name', 'user_id'];
 
-    public function memoTags()
+    public function memos()
     {
-        return $this->hasMany(MemoTag::class);
+        return $this->belongsToMany(Memo::class, 'memo_tags');
     }
 }
