@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class MemoTag extends Model
 {
     use HasFactory;
-    public $timestamps = false;
     protected $fillable = ['tag_id', 'memo_id'];
 
     public function memo()

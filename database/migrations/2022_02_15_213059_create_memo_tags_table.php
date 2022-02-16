@@ -16,6 +16,7 @@ class CreateMemoTagsTable extends Migration
         Schema::create('memo_tags', function (Blueprint $table) {
             $table->foreignId('memo_id')->constrained();
             $table->foreignId('tag_id')->constrained();
+            $table->timestamps();
         });
     }
 
