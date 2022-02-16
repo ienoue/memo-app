@@ -60,7 +60,6 @@ class HomeController extends Controller
                     'memo_id' => $memo->id,
                     'tag_id' => $tag->id,
                 ]);
-
             }
         );
         return redirect('/home');
@@ -75,20 +74,34 @@ class HomeController extends Controller
         $memo = Memo::where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
-
         return view('edit', compact('memos', 'memo', 'id'));
     }
 
     public function update(Request $request)
     {
+        DB::transaction(
+            function () use ($request) {
+                $memo = Memo::where('id', $request->id)
+                ->where('user_id', Auth::id())
+                ->first();
+                $memo->content = $request->content;
+                $memo->save();
 
-        $memo = Memo::where('id', $request->id)
-            ->where('user_id', Auth::id())
-            ->first();
-        $form = $request->all();
-        unset($form['_token']);
-        $memo->user_id = Auth::id();
-        $memo->fill($form)->save();
+                $tag = $request->tag;
+                if(isset($tag)) {
+                    $tag = Tag::create([
+                        'user_id' => Auth::id(),
+                        'name' => $request->tag,
+                    ]);
+    
+                    MemoTag::create([
+                        'memo_id' => $memo->id,
+                        'tag_id' => $tag->id,
+                    ]);
+                }
+
+            }
+        );
 
         return redirect()->route('edit', ['id' => $request->id]);
     }

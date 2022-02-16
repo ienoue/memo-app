@@ -17,6 +17,10 @@
                     <input type="hidden" name="id" value="{{ $id }}">
                     <textarea name="content" class="form-control" rows="3" placeholder="テキストを入力して下さい">{{ $memo->content }}</textarea>
                 </div>
+                <div class="mb-3">
+                    <input name="tag" type="text" class="form-control" placeholder="新しいタグを入力">
+                </div>
+
                 <button type="submit" class="btn btn-primary mb-3">更新</button>
             </form>
         </div>
