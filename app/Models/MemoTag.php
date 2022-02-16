@@ -13,11 +13,11 @@ class MemoTag extends Model
 
     public function memo()
     {
-        $this->belongsTo(Memo::class);
+        return $this->belongsTo(Memo::class);
     }
 
     public function tag()
     {
-        $this->belongsTo(Tag::class);
+        return $this->belongsTo(Tag::class);
     }
 }
