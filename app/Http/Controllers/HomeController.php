@@ -51,15 +51,15 @@ class HomeController extends Controller
                     'content' => $request->content,
                 ]);
 
-                $tag = Tag::create([
-                    'user_id' => Auth::id(),
-                    'name' => $request->tag,
-                ]);
-
-                MemoTag::create([
-                    'memo_id' => $memo->id,
-                    'tag_id' => $tag->id,
-                ]);
+                $tag = Tag::where('name', $request->tag)->first();
+                // タグが未作成だった場合の処理
+                if (!isset($tag)) {
+                    $tag = Tag::create([
+                        'user_id' => Auth::id(),
+                        'name' => $request->tag,
+                    ]);
+                }
+                $memo->tags()->sync($tag->id);
             }
         );
         return redirect('/home');
@@ -74,6 +74,7 @@ class HomeController extends Controller
         $memo = Memo::where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
+
         return view('edit', compact('memos', 'memo', 'id'));
     }
 
@@ -82,24 +83,26 @@ class HomeController extends Controller
         DB::transaction(
             function () use ($request) {
                 $memo = Memo::where('id', $request->id)
-                ->where('user_id', Auth::id())
-                ->first();
+                    ->where('user_id', Auth::id())
+                    ->first();
                 $memo->content = $request->content;
                 $memo->save();
 
                 $tag = $request->tag;
-                if(isset($tag)) {
-                    $tag = Tag::create([
-                        'user_id' => Auth::id(),
-                        'name' => $request->tag,
-                    ]);
-    
-                    MemoTag::create([
-                        'memo_id' => $memo->id,
-                        'tag_id' => $tag->id,
-                    ]);
+                if (isset($tag)) {
+                    $tag = Tag::where('name', $request->tag)->first();
+                    // タグが未作成だった場合の処理
+                    if (!isset($tag)) {
+                        $tag = Tag::create([
+                            'user_id' => Auth::id(),
+                            'name' => $request->tag,
+                        ]);
+                    }
+                    // tagsテーブルから特定のmemo_idに紐づくidを配列として取得
+                    $ids = $memo->tags()->pluck('id');
+                    $ids->push($tag->id);
+                    $memo->tags()->sync($ids);
                 }
-
             }
         );
 
