@@ -31,7 +31,12 @@ class HomeController extends Controller
         $memos = Memo::where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get();
-        return view('home', compact('memos'));
+
+        $tags = Tag::where('user_id', Auth::id())
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return view('home', compact('memos', 'tags'));
     }
 
     public function delete(Request $request)
@@ -51,15 +56,23 @@ class HomeController extends Controller
                     'content' => $request->content,
                 ]);
 
-                $tag = Tag::where('name', $request->tag)->first();
-                // タグが未作成だった場合の処理
-                if (!isset($tag)) {
-                    $tag = Tag::create([
-                        'user_id' => Auth::id(),
-                        'name' => $request->tag,
-                    ]);
+                $tagName = $request->tag;
+                $tags = $request->tags;
+                // タグIDの配列が文字列なので数値にキャストしておく、タグがチェックされて無ければ新規作成
+                $tags = isset($tags) ? array_map('intval', $request->tags) : [];
+                // フォームにタグが入力されていた場合の処理
+                if (isset($tagName)) {
+                    $tag = Tag::where('name', $tagName)->first();
+                    // タグが未作成のものだった場合の処理
+                    if (!isset($tag)) {
+                        $tag = Tag::create([
+                            'user_id' => Auth::id(),
+                            'name' => $tagName,
+                        ]);
+                    }
+                    $tags[] = $tag->id;
                 }
-                $memo->tags()->sync($tag->id);
+                $memo->tags()->sync($tags);
             }
         );
         return redirect('/home');
@@ -88,14 +101,14 @@ class HomeController extends Controller
                 $memo->content = $request->content;
                 $memo->save();
 
-                $tag = $request->tag;
-                if (isset($tag)) {
-                    $tag = Tag::where('name', $request->tag)->first();
-                    // タグが未作成だった場合の処理
+                $tagName = $request->tag;
+                if (isset($tagName)) {
+                    $tag = Tag::where('name', $tagName)->first();
+                    // タグが未作成のものだった場合の処理
                     if (!isset($tag)) {
                         $tag = Tag::create([
                             'user_id' => Auth::id(),
-                            'name' => $request->tag,
+                            'name' => $tagName,
                         ]);
                     }
                     // tagsテーブルから特定のmemo_idに紐づくidを配列として取得
