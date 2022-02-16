@@ -13,6 +13,6 @@ class Memo extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'memo_tags');
+        return $this->belongsToMany(Tag::class, 'memo_tags')->withTimestamps();;
     }
 }
