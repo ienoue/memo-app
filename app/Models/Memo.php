@@ -66,4 +66,20 @@ class Memo extends Model
         $memo->save();
         return $memo;
     }
+
+    public static function getAll()
+    {
+        return self::where('user_id', Auth::id())
+            ->orderBy('memos.updated_at', 'desc')
+            ->get();
+    }
+
+    public static function getAllByTag(string $tagID)
+    {
+        return self::where('user_id', Auth::id())
+            ->orderBy('memos.updated_at', 'desc')
+            ->join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
+            ->where('memo_tags.tag_id', $tagID)
+            ->get();
+    }
 }

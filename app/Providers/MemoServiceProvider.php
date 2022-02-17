@@ -27,20 +27,15 @@ class MemoServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer(['home', 'edit'], function ($view) {
-            $memosQuery = Memo::where('user_id', Auth::id())
-                ->orderBy('memos.updated_at', 'desc');
             // URLにtagクエリパラメータが設定してあった場合、memosテーブルをtag_idで絞り込む
             $tagID = request()->input('tag');
             if (isset($tagID)) {
-                $memosQuery = $memosQuery
-                    ->join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
-                    ->where('memo_tags.tag_id', $tagID);
+                $memos = Memo::getAllByTag($tagID);
+            } else {
+                $memos = Memo::getAll();
             }
-            $memos = $memosQuery->get();
 
-            $tags = Tag::where('user_id', Auth::id())
-                ->orderBy('updated_at', 'desc')
-                ->get();
+            $tags = Tag::getAll();
             $view->with([
                 'memos' => $memos,
                 'tags' => $tags
