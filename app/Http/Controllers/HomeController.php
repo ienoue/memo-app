@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Memo;
 use App\Models\Tag;
-use App\Models\MemoTag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -28,23 +27,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        
-        $memosQuery = Memo::where('user_id', Auth::id())
-            ->orderBy('memos.updated_at', 'desc');
-        // URLにtagクエリパラメータが設定してあった場合、memosテーブルをtag_idで絞り込む
-        $tagID = $request->tag;
-        if (isset($tagID)) {
-            $memosQuery = $memosQuery
-                ->join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
-                ->where('memo_tags.tag_id', $tagID);
-        }
-        $memos = $memosQuery->get();
-
-        $tags = Tag::where('user_id', Auth::id())
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
-        return view('home', compact('memos', 'tags'));
+        return view('home');
     }
 
     public function delete(Request $request)
@@ -88,27 +71,12 @@ class HomeController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $memosQuery = Memo::where('user_id', Auth::id())
-            ->orderBy('memos.updated_at', 'desc');
-        // URLにtagクエリパラメータが設定してあった場合、memosテーブルをtag_idで絞り込む
-        $tagID = $request->tag;
-        if (isset($tagID)) {
-            $memosQuery = $memosQuery
-                ->join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
-                ->where('memo_tags.tag_id', $tagID);
-        }
-        $memos = $memosQuery->get();
-
         $memo = Memo::where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
 
-        $tags = Tag::where('user_id', Auth::id())
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
         $memoTags = $memo->tags()->pluck('id');
-        return view('edit', compact('memos', 'memo', 'id', 'tags', 'memoTags'));
+        return view('edit', compact('memo', 'id', 'memoTags'));
     }
 
     public function update(Request $request)
