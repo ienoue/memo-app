@@ -66,8 +66,9 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                                     document.getElementById('logout-form').submit();">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                                             document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -91,8 +92,11 @@
                             左側パネル
                         </div>
                         <div class="card-body">
-                            <p class="card-text">With supporting text below as a natural lead-in to additional
-                                content.</p>
+                            <a href="{{ route('home') }}" class="card-text d-block">全て表示</a>
+                            @foreach ($tags as $tag)
+                                <a href="{{ route('home', ['tag' => $tag->id]) }}"
+                                    class="card-text d-block">{{ $tag->name }}</a>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -103,7 +107,8 @@
                         </div>
                         <div class="card-body">
                             @foreach ($memos as $memo)
-                                <a href="{{ route('edit', ['id' => $memo->id]) }}" class="card-text d-block">{{ $memo->content }}</a>
+                                <a href="{{ route('edit', ['id' => $memo->id, 'tag' => Request::input('tag')]) }}"
+                                    class="card-text d-block">{{ $memo->content }}</a>
                             @endforeach
                         </div>
                     </div>

@@ -26,12 +26,21 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $memos = Memo::where('user_id', Auth::id())
-            ->orderBy('updated_at', 'desc')
+        $tagID = $request->tag;
+        if (isset($tagID)) {
+            $memos = Memo::join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
+            ->where('memos.user_id', Auth::id())
+            ->where('memo_tags.tag_id', $tagID)
+            ->orderBy('memos.updated_at', 'desc')
             ->get();
 
+        } else {
+            $memos = Memo::where('user_id', Auth::id())
+                ->orderBy('updated_at', 'desc')
+                ->get();
+        }
         $tags = Tag::where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -78,11 +87,21 @@ class HomeController extends Controller
         return redirect('/home');
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $memos = Memo::where('user_id', Auth::id())
-            ->orderBy('updated_at', 'desc')
+        $tagID = $request->tag;
+        if (isset($tagID)) {
+            $memos = Memo::join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
+            ->where('memos.user_id', Auth::id())
+            ->where('memo_tags.tag_id', $tagID)
+            ->orderBy('memos.updated_at', 'desc')
             ->get();
+
+        } else {
+            $memos = Memo::where('user_id', Auth::id())
+                ->orderBy('updated_at', 'desc')
+                ->get();
+        }
 
         $memo = Memo::where('id', $id)
             ->where('user_id', Auth::id())
