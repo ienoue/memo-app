@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Memo;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -38,34 +37,9 @@ class HomeController extends Controller
         return redirect('/home');
     }
 
-    public function create(Request $request)
+    public function create()
     {
-        DB::transaction(
-            function () use ($request) {
-                $memo = Memo::create([
-                    'user_id' => Auth::id(),
-                    'content' => $request->content,
-                ]);
-
-                $tagName = $request->tag;
-                $tags = $request->tags;
-                // タグIDの配列が文字列から数値にキャストしておく、タグがチェックされて無ければ新規作成
-                $tags = isset($tags) ? array_map('intval', $request->tags) : [];
-                // フォームにタグが入力されていた場合の処理
-                if (isset($tagName)) {
-                    $tag = Tag::where('name', $tagName)->first();
-                    // タグが未作成のものだった場合の処理
-                    if (!isset($tag)) {
-                        $tag = Tag::create([
-                            'user_id' => Auth::id(),
-                            'name' => $tagName,
-                        ]);
-                    }
-                    $tags[] = $tag->id;
-                }
-                $memo->tags()->sync($tags);
-            }
-        );
+        Memo::saveMemoWithTags();
         return redirect('/home');
     }
 
@@ -81,34 +55,7 @@ class HomeController extends Controller
 
     public function update(Request $request)
     {
-        DB::transaction(
-            function () use ($request) {
-                $memo = Memo::where('id', $request->id)
-                    ->where('user_id', Auth::id())
-                    ->first();
-                $memo->content = $request->content;
-                $memo->save();
-
-                $tagName = $request->tag;
-                $tags = $request->tags;
-                // タグIDの配列を文字列から数値にキャストしておく、タグがチェックされて無ければ新規作成
-                $tags = isset($tags) ? array_map('intval', $request->tags) : [];
-                // フォームにタグが入力されていた場合の処理
-                if (isset($tagName)) {
-                    $tag = Tag::where('name', $tagName)->first();
-                    // タグが未作成のものだった場合の処理
-                    if (!isset($tag)) {
-                        $tag = Tag::create([
-                            'user_id' => Auth::id(),
-                            'name' => $tagName,
-                        ]);
-                    }
-                    $tags[] = $tag->id;
-                }
-                $memo->tags()->sync($tags);
-            }
-        );
-
+        Memo::saveMemoWithTags();
         return redirect()->route('edit', ['id' => $request->id]);
     }
 }
