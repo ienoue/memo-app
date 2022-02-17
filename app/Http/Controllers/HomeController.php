@@ -28,19 +28,18 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+        
+        $memosQuery = Memo::where('user_id', Auth::id())
+            ->orderBy('memos.updated_at', 'desc');
+        // URLにtagクエリパラメータが設定してあった場合、memosテーブルをtag_idで絞り込む
         $tagID = $request->tag;
         if (isset($tagID)) {
-            $memos = Memo::join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
-            ->where('memos.user_id', Auth::id())
-            ->where('memo_tags.tag_id', $tagID)
-            ->orderBy('memos.updated_at', 'desc')
-            ->get();
-
-        } else {
-            $memos = Memo::where('user_id', Auth::id())
-                ->orderBy('updated_at', 'desc')
-                ->get();
+            $memosQuery = $memosQuery
+                ->join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
+                ->where('memo_tags.tag_id', $tagID);
         }
+        $memos = $memosQuery->get();
+
         $tags = Tag::where('user_id', Auth::id())
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -89,19 +88,16 @@ class HomeController extends Controller
 
     public function edit(Request $request, $id)
     {
+        $memosQuery = Memo::where('user_id', Auth::id())
+            ->orderBy('memos.updated_at', 'desc');
+        // URLにtagクエリパラメータが設定してあった場合、memosテーブルをtag_idで絞り込む
         $tagID = $request->tag;
         if (isset($tagID)) {
-            $memos = Memo::join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
-            ->where('memos.user_id', Auth::id())
-            ->where('memo_tags.tag_id', $tagID)
-            ->orderBy('memos.updated_at', 'desc')
-            ->get();
-
-        } else {
-            $memos = Memo::where('user_id', Auth::id())
-                ->orderBy('updated_at', 'desc')
-                ->get();
+            $memosQuery = $memosQuery
+                ->join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
+                ->where('memo_tags.tag_id', $tagID);
         }
+        $memos = $memosQuery->get();
 
         $memo = Memo::where('id', $id)
             ->where('user_id', Auth::id())
@@ -112,7 +108,6 @@ class HomeController extends Controller
             ->get();
 
         $memoTags = $memo->tags()->pluck('id');
-        // dd($memoTags);
         return view('edit', compact('memos', 'memo', 'id', 'tags', 'memoTags'));
     }
 
