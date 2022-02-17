@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Memo;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -23,12 +24,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $memos = Memo::where('user_id', Auth::id())
-            ->orderBy('updated_at', 'desc')
-            ->get();
-        return view('home', compact('memos'));
+        return view('home');
     }
 
     public function delete(Request $request)
@@ -41,36 +39,33 @@ class HomeController extends Controller
 
     public function create(Request $request)
     {
-        $memo = new Memo();
-        $form = $request->all();
-        unset($form['_token']);
-        $memo->user_id = Auth::id();
-        $memo->fill($form)->save();
+        $validate_rule = [
+            'content' => 'required|not_regex:/^[\s　]+$/',
+            'tag' => 'not_regex:/^[\s　]+$/',
+        ];
+        $this->validate($request, $validate_rule);
+        Memo::saveMemoWithTags();
         return redirect('/home');
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $memos = Memo::where('user_id', Auth::id())
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
         $memo = Memo::where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
 
-        return view('edit', compact('memos', 'memo', 'id'));
+        $memoTags = $memo->tags()->pluck('id');
+        return view('edit', compact('memo', 'id', 'memoTags'));
     }
 
     public function update(Request $request)
     {
-        $memo = Memo::where('id', $request->id)
-            ->where('user_id', Auth::id())
-            ->first();
-        $form = $request->all();
-        unset($form['_token']);
-        $memo->user_id = Auth::id();
-        $memo->fill($form)->save();
+        $validate_rule = [
+            'content' => 'required|not_regex:/^[\s　]+$/',
+            'tag' => 'not_regex:/^[\s　]+$/',
+        ];
+        $this->validate($request, $validate_rule);
+        Memo::saveMemoWithTags();
         return redirect()->route('edit', ['id' => $request->id]);
     }
 }
