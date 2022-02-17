@@ -37,8 +37,13 @@ class HomeController extends Controller
         return redirect('/home');
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $validate_rule = [
+            'content' => 'required|not_regex:/^[\s　]+$/',
+            'tag' => 'not_regex:/^[\s　]+$/',
+        ];
+        $this->validate($request, $validate_rule);
         Memo::saveMemoWithTags();
         return redirect('/home');
     }
@@ -55,6 +60,11 @@ class HomeController extends Controller
 
     public function update(Request $request)
     {
+        $validate_rule = [
+            'content' => 'required|not_regex:/^[\s　]+$/',
+            'tag' => 'not_regex:/^[\s　]+$/',
+        ];
+        $this->validate($request, $validate_rule);
         Memo::saveMemoWithTags();
         return redirect()->route('edit', ['id' => $request->id]);
     }
