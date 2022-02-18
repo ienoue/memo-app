@@ -30,15 +30,17 @@ class MemoServiceProvider extends ServiceProvider
             // URLにtagクエリパラメータが設定してあった場合、memosテーブルをtag_idで絞り込む
             $tagID = request()->input('tag');
             if (isset($tagID)) {
-                $memos = Memo::getAllByTag($tagID);
+                $memos = Memo::getQueryOfAllByTag($tagID);
             } else {
-                $memos = Memo::getAll();
+                $memos = Memo::getQueryOfAll();
             }
 
-            $tags = Tag::getAll();
+            $tags = Tag::getQueryOfAll();
             $view->with([
-                'memos' => $memos,
-                'tags' => $tags
+                'memos' => $memos->get(),
+                'tags' => $tags->get(),
+                'memosPaginate' => $memos->simplePaginate($perPage = 10, $columns = ['*'], $pageName = 'memos'),
+                'tagsPaginate' => $tags->simplePaginate($perPage = 10, $columns = ['*'], $pageName = 'tags'),
             ]);
         });
     }
