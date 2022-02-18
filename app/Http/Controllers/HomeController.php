@@ -48,9 +48,7 @@ class HomeController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $memo = Memo::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->first();
+        $memo = Memo::getMemo($id);
         if(!isset($memo)) {
             return redirect('/home');
         } 

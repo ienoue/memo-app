@@ -86,6 +86,13 @@ class Memo extends Model
         return $memo;
     }
 
+    public static function getMemo($id)
+    {
+        return self::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+    }
+
     /**
      * 特定ユーザのメモ一覧を取得
      *
