@@ -31,11 +31,7 @@ class HomeController extends Controller
 
     public function delete(Request $request)
     {
-        $memo = Memo::where('id', $request->id)
-            ->where('user_id', Auth::id())
-            ->first();
-        $memo->tags()->detach();
-        $memo->delete();
+        Memo::deleteMemoWithTags();
         return redirect('/home');
     }
 

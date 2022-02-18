@@ -19,6 +19,11 @@ class Memo extends Model
         return $this->belongsToMany(Tag::class, 'memo_tags')->withTimestamps();;
     }
 
+    /**
+     * POSTされた内容でmemos・memo_tags・tagsを作成
+     *
+     * @return void
+     */
     public static function saveMemoWithTags()
     {
         DB::transaction(
@@ -49,6 +54,20 @@ class Memo extends Model
         );
     }
 
+    /**
+     * POSTされた内容でmemos・memo_tagsを削除
+     *
+     * @return void
+     */
+    public static function deleteMemoWithTags()
+    {
+        $memo = Memo::where('id', Request::get('id'))
+            ->where('user_id', Auth::id())
+            ->first();
+        $memo->tags()->detach();
+        $memo->delete();
+    }
+
     public static function createMemo()
     {
         return self::create([
@@ -67,6 +86,11 @@ class Memo extends Model
         return $memo;
     }
 
+    /**
+     * 特定ユーザのメモ一覧を取得
+     *
+     * @return object
+     */
     public static function getAll()
     {
         return self::where('user_id', Auth::id())
@@ -74,6 +98,12 @@ class Memo extends Model
             ->get();
     }
 
+    /**
+     * 特定ユーザのメモ一覧をtagIDで絞り込んで取得
+     *
+     * @param string $tagID
+     * @return object
+     */
     public static function getAllByTag(string $tagID)
     {
         return self::where('user_id', Auth::id())
