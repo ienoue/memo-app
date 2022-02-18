@@ -42,8 +42,8 @@ class HomeController extends Controller
     public function create(Request $request)
     {
         $validate_rule = [
-            'content' => 'required|not_regex:/^[ 　]+$/',
-            'tag' => 'not_regex:/^[ 　]+$/',
+            'content' => 'required|not_regex:/^[\s　]+$/',
+            'tag' => 'nullable|not_regex:/^[\s　]+$/',
         ];
         $this->validate($request, $validate_rule);
         Memo::saveMemoWithTags();
@@ -65,8 +65,8 @@ class HomeController extends Controller
     public function update(Request $request)
     {
         $validate_rule = [
-            'content' => 'required|not_regex:/^[ 　]+$/',
-            'tag' => 'not_regex:/^[ 　]+$/',
+            'content' => 'required|not_regex:/^[\s　]+$/',
+            'tag' => 'nullable|not_regex:/^[\s　]+$/',
         ];
         $this->validate($request, $validate_rule);
         Memo::saveMemoWithTags();
