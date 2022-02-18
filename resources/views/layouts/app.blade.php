@@ -94,10 +94,10 @@
                             タグ一覧
                         </div>
                         <div class="card-body">
-                            <a href="{{ route('home') }}" class="card-text d-block">全て表示</a>
+                            <a href="{{ route('home') }}" class="card-text d-block mb-2">全て表示</a>
                             @foreach ($tags as $tag)
                                 <a href="{{ route('home', ['tag' => $tag->id]) }}"
-                                    class="card-text d-block">{{ $tag->name }}</a>
+                                    class="card-text d-block mb-2">{{ $tag->name }}</a>
                             @endforeach
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                         <div class="card-body">
                             @foreach ($memos as $memo)
                                 <a href="{{ route('edit', ['id' => $memo->id, 'tag' => Request::input('tag')]) }}"
-                                    class="card-text d-block">{{ $memo->content }}</a>
+                                    class="card-text d-block mb-2">{{ $memo->content }}</a>
                             @endforeach
                         </div>
                     </div>

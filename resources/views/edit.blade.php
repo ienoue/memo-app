@@ -1,5 +1,5 @@
 @extends('layouts.app')
-    
+
 @section('javascript')
     <script src="/js/memo.js"></script>
 @endsection
@@ -17,7 +17,7 @@
         <div class="card-body">
             <form method="POST" action="{{ route('update') }}">
                 @csrf
-                <div class="mb-3">
+                <div class="mb-5">
                     <input type="hidden" name="id" value="{{ $id }}">
                     <textarea name="content" class="form-control mb-2" rows="3"
                         placeholder="テキストを入力して下さい">{{ $memo->content }}</textarea>
@@ -26,17 +26,20 @@
                             テキストが入力されていません。
                         </div>
                     @enderror
-
                 </div>
-                @foreach ($tags as $tag)
-                    <div class="form-check form-check-inline mb-3">
-                        <input class="form-check-input" type="checkbox" name="tags[]" id="tag-{{ $tag->id }}"
-                            value="{{ $tag->id }}" {{ $memoTags->contains($tag->id) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="tag-{{ $tag->id }}">{{ $tag->name }}</label>
-                    </div>
-                @endforeach
+
+                <h6 class="card-subtitle mb-3 text-muted">タグ一覧</h6>
+                <div class="mb-4">
+                    @foreach ($tags as $tag)
+                        <div class="form-check form-check-inline mb-3">
+                            <input class="form-check-input" type="checkbox" name="tags[]" id="tag-{{ $tag->id }}"
+                                value="{{ $tag->id }}" {{ $memoTags->contains($tag->id) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="tag-{{ $tag->id }}">{{ $tag->name }}</label>
+                        </div>
+                    @endforeach
+                </div>
                 <div class="mb-3">
-                    <input name="tag" type="text" class="form-control mb-2" placeholder="新しいタグを入力">
+                    <input name="tag" type="text" class="form-control mb-4" placeholder="新しいタグを入力">
                     @error('tag')
                         <div class="alert alert-danger" role="alert">
                             スペース以外の文字を入力して下さい。
