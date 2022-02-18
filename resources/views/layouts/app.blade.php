@@ -12,6 +12,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @yield('javascript')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -22,6 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/memo.css">
 </head>
 
 <body>
@@ -68,7 +70,7 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                                             document.getElementById('logout-form').submit();">
+                                                                                 document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -87,28 +89,29 @@
         <main class="">
             <div class="row">
                 <div class="col-md-2 p-0">
-                    <div class="card">
+                    <div class="card disp-height">
                         <div class="card-header">
-                            左側パネル
+                            タグ一覧
                         </div>
                         <div class="card-body">
-                            <a href="{{ route('home') }}" class="card-text d-block">全て表示</a>
+                            <a href="{{ route('home') }}" class="card-text d-block mb-2">全て表示</a>
                             @foreach ($tags as $tag)
                                 <a href="{{ route('home', ['tag' => $tag->id]) }}"
-                                    class="card-text d-block">{{ $tag->name }}</a>
+                                    class="card-text d-block mb-2">{{ $tag->name }}</a>
                             @endforeach
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 p-0">
-                    <div class="card">
-                        <div class="card-header">
-                            中央パネル
+                    <div class="card disp-height">
+                        <div class="card-header d-flex justify-content-between">
+                            メモ一覧
+                            <a href="{{ route('home') }}"><i class="fa-solid fa-circle-plus"></i></i></a>
                         </div>
                         <div class="card-body">
                             @foreach ($memos as $memo)
                                 <a href="{{ route('edit', ['id' => $memo->id, 'tag' => Request::input('tag')]) }}"
-                                    class="card-text d-block">{{ $memo->content }}</a>
+                                    class="card-text d-block mb-2">{{ $memo->content }}</a>
                             @endforeach
                         </div>
                     </div>
