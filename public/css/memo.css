@@ -1,3 +1,10 @@
 .disp-height {
     height: calc(100vh - 100px);
 }
+
+@media (max-width: 768px) {
+    .disp-height {
+        height: auto;
+        max-height: 50vh;
+    }
+}
