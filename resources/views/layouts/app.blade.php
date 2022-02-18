@@ -70,7 +70,7 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                                                 document.getElementById('logout-form').submit();">
+                                                                                             document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -93,12 +93,15 @@
                         <div class="card-header">
                             タグ一覧
                         </div>
-                        <div class="card-body">
+                        <div class="card-body overflow-auto">
                             <a href="{{ route('home') }}" class="card-text d-block mb-2">全て表示</a>
-                            @foreach ($tags as $tag)
-                                <a href="{{ route('home', ['tag' => $tag->id]) }}"
-                                    class="card-text d-block mb-2">{{ $tag->name }}</a>
-                            @endforeach
+                            <div class="mb-4">
+                                @foreach ($tagsPaginate as $tag)
+                                    <a href="{{ route('home', ['tag' => $tag->id]) }}"
+                                        class="card-text d-block mb-2">{{ $tag->name }}</a>
+                                @endforeach
+                            </div>
+                            {{ $tagsPaginate->links() }}
                         </div>
                     </div>
                 </div>
@@ -108,11 +111,14 @@
                             メモ一覧
                             <a href="{{ route('home') }}"><i class="fa-solid fa-circle-plus"></i></i></a>
                         </div>
-                        <div class="card-body">
-                            @foreach ($memos as $memo)
-                                <a href="{{ route('edit', ['id' => $memo->id, 'tag' => Request::input('tag')]) }}"
-                                    class="card-text d-block mb-2">{{ $memo->content }}</a>
-                            @endforeach
+                        <div class="card-body overflow-auto">
+                            <div class="mb-4">
+                                @foreach ($memosPaginate as $memo)
+                                    <a href="{{ route('edit', ['id' => $memo->id, 'tag' => Request::input('tag')]) }}"
+                                        class="card-text d-block mb-2">{{ $memo->content }}</a>
+                                @endforeach
+                            </div>
+                            {{ $memosPaginate->links() }}
                         </div>
                     </div>
                 </div>

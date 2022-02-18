@@ -14,7 +14,7 @@
                 <i role="button" onclick="deleteMemo(event);" class="fa-solid fa-trash link-primary"></i>
             </form>
         </div>
-        <div class="card-body">
+        <div class="card-body overflow-auto">
             <form method="POST" action="{{ route('update') }}">
                 @csrf
                 <div class="mb-5">

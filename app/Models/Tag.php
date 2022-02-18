@@ -18,9 +18,13 @@ class Tag extends Model
         return $this->belongsToMany(Memo::class, 'memo_tags')->withTimestamps();;
     }
 
-    public static function getAll(){
+    /**
+     * 特定ユーザのタグ一覧をクエリで取得
+     *
+     * @return object
+     */
+    public static function getQueryOfAll(){
         return self::where('user_id', Auth::id())
-        ->orderBy('updated_at', 'desc')
-        ->get();
+        ->orderBy('updated_at', 'desc');
     }
 }

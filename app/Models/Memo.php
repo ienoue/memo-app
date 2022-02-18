@@ -94,29 +94,27 @@ class Memo extends Model
     }
 
     /**
-     * 特定ユーザのメモ一覧を取得
+     * 特定ユーザのメモ一覧をクエリで取得
      *
      * @return object
      */
-    public static function getAll()
+    public static function getQueryOfAll()
     {
         return self::where('user_id', Auth::id())
-            ->orderBy('memos.updated_at', 'desc')
-            ->get();
+            ->orderBy('memos.updated_at', 'desc');
     }
 
     /**
-     * 特定ユーザのメモ一覧をtagIDで絞り込んで取得
+     * 特定ユーザのメモ一覧をtagIDで絞り込んでクエリで取得
      *
      * @param string $tagID
      * @return object
      */
-    public static function getAllByTag(string $tagID)
+    public static function getQueryOfAllByTag(string $tagID)
     {
         return self::where('user_id', Auth::id())
             ->orderBy('memos.updated_at', 'desc')
             ->join('memo_tags', 'memos.id', '=', 'memo_tags.memo_id')
-            ->where('memo_tags.tag_id', $tagID)
-            ->get();
+            ->where('memo_tags.tag_id', $tagID);
     }
 }
