@@ -12,6 +12,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @yield('javascript')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -89,7 +90,7 @@
                 <div class="col-md-2 p-0">
                     <div class="card">
                         <div class="card-header">
-                            左側パネル
+                            タグ一覧
                         </div>
                         <div class="card-body">
                             <a href="{{ route('home') }}" class="card-text d-block">全て表示</a>
@@ -102,8 +103,9 @@
                 </div>
                 <div class="col-md-4 p-0">
                     <div class="card">
-                        <div class="card-header">
-                            中央パネル
+                        <div class="card-header d-flex justify-content-between">
+                            メモ一覧
+                            <a href="{{ route('home') }}"><i class="fa-solid fa-circle-plus"></i></i></a>
                         </div>
                         <div class="card-body">
                             @foreach ($memos as $memo)

@@ -1,13 +1,17 @@
 @extends('layouts.app')
+    
+@section('javascript')
+    <script src="/js/memo.js"></script>
+@endsection
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            右側パネル
-            <form action="{{ route('delete') }}" method="POST">
+        <div class="card-header d-flex justify-content-between me-3">
+            メモ編集
+            <form name="deleteForm" action="{{ route('delete') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id" value="{{ $id }}">
-                <button>削除</button>
+                <i role="button" onclick="deleteMemo(event);" class="fa-solid fa-trash link-primary"></i>
             </form>
         </div>
         <div class="card-body">
