@@ -70,7 +70,7 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                                                             document.getElementById('logout-form').submit();">
+                                                                                                                     document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -86,26 +86,31 @@
             </div>
         </nav>
 
-        <main class="">
+        <main class="py-4 container">
             <div class="row">
-                <div class="col-md-2 p-0">
+                <div class="col-md-3">
                     <div class="card disp-height">
                         <div class="card-header">
                             タグ一覧
                         </div>
                         <div class="card-body overflow-auto">
-                            <a href="{{ route('home') }}" class="card-text d-block mb-2">全て表示</a>
-                            <div class="mb-4">
+                            <ul class="list-group mb-4">
+                                <a href="{{ route('home') }}"
+                                    class="list-group-item list-group-item-action {{ !isset($tagID) ? 'active' : '' }}">
+                                    全て表示
+                                </a>
                                 @foreach ($tagsPaginate as $tag)
-                                    <a href="{{ route('home', ['tag' => $tag->id]) }}"
-                                        class="card-text d-block mb-2">{{ $tag->name }}</a>
+                                    <a href="{{ route('home', ['tagID' => $tag->id]) }}"
+                                        class="list-group-item list-group-item-action text-truncate {{ isset($tagID) && $tag->id == $tagID ? 'active' : '' }}">
+                                        {{ $tag->name }}
+                                    </a>
                                 @endforeach
-                            </div>
+                            </ul>
                             {{ $tagsPaginate->links() }}
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 p-0">
+                <div class="col-md-4">
                     <div class="card disp-height">
                         <div class="card-header d-flex justify-content-between">
                             メモ一覧
@@ -113,16 +118,20 @@
                         </div>
                         <div class="card-body overflow-auto">
                             <div class="mb-4">
-                                @foreach ($memosPaginate as $memo)
-                                    <a href="{{ route('edit', ['id' => $memo->id, 'tag' => Request::input('tag')]) }}"
-                                        class="card-text d-block mb-2">{{ $memo->content }}</a>
-                                @endforeach
+                                <ul class="list-group">
+                                    @foreach ($memosPaginate as $memo)
+                                        <a href="{{ route('edit', ['id' => $memo->id, 'tagID' => $tagID]) }}"
+                                            class="list-group-item list-group-item-action text-truncate {{ isset($id) && $memo->id == $id ? 'active' : '' }}">
+                                            {{ $memo->content }}
+                                        </a>
+                                    @endforeach
+                                </ul>
                             </div>
                             {{ $memosPaginate->links() }}
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 p-0">@yield('content')</div>
+                <div class="col-md-5">@yield('content')</div>
             </div>
         </main>
     </div>

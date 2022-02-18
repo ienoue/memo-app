@@ -28,7 +28,7 @@ class MemoServiceProvider extends ServiceProvider
     {
         view()->composer(['home', 'edit'], function ($view) {
             // URLにtagクエリパラメータが設定してあった場合、memosテーブルをtag_idで絞り込む
-            $tagID = request()->input('tag');
+            $tagID = request()->input('tagID');
             if (isset($tagID)) {
                 $memos = Memo::getQueryOfAllByTag($tagID);
             } else {
@@ -41,6 +41,7 @@ class MemoServiceProvider extends ServiceProvider
                 'tags' => $tags->get(),
                 'memosPaginate' => $memos->simplePaginate($perPage = 10, $columns = ['*'], $pageName = 'memos'),
                 'tagsPaginate' => $tags->simplePaginate($perPage = 10, $columns = ['*'], $pageName = 'tags'),
+                'tagID' => $tagID,
             ]);
         });
     }
