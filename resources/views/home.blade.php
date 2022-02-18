@@ -12,7 +12,7 @@
                     <textarea name="content" class="form-control mb-2" rows="3" placeholder="テキストを入力して下さい"></textarea>
                     @error('content')
                         <div class="alert alert-danger" role="alert">
-                            テキストが入力されていません。
+                            {{ $message }}
                         </div>
                     @enderror
                 </div>
@@ -28,10 +28,10 @@
                     @endforeach
                 </div>
                 <div class="mb-3">
-                    <input name="tag" type="text" class="form-control mb-4" placeholder="新しいタグを入力">
+                    <input name="tag" type="text" class="form-control mb-2" placeholder="新しいタグを入力">
                     @error('tag')
                         <div class="alert alert-danger" role="alert">
-                            スペース以外の文字を入力して下さい。
+                            {{ $message }}
                         </div>
                     @enderror
                 </div>

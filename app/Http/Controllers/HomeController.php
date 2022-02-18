@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Memo;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\MemoRequest;
 
 class HomeController extends Controller
 {
@@ -35,13 +36,8 @@ class HomeController extends Controller
         return redirect('/home');
     }
 
-    public function create(Request $request)
+    public function create(MemoRequest $request)
     {
-        $validate_rule = [
-            'content' => 'required|not_regex:/^[\s　]+$/',
-            'tag' => 'nullable|not_regex:/^[\s　]+$/',
-        ];
-        $this->validate($request, $validate_rule);
         Memo::saveMemoWithTags();
         return redirect('/home');
     }
@@ -56,13 +52,8 @@ class HomeController extends Controller
         return view('edit', compact('memo', 'id', 'memoTags'));
     }
 
-    public function update(Request $request)
+    public function update(MemoRequest $request)
     {
-        $validate_rule = [
-            'content' => 'required|not_regex:/^[\s　]+$/',
-            'tag' => 'nullable|not_regex:/^[\s　]+$/',
-        ];
-        $this->validate($request, $validate_rule);
         Memo::saveMemoWithTags();
         return redirect()->route('edit', ['id' => $request->id]);
     }
