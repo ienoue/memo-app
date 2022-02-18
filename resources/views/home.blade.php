@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card">
+    <div class="card disp-height">
         <div class="card-header">
             新規メモ作成
         </div>

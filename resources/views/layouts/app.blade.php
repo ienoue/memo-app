@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/memo.css">
 </head>
 
 <body>
@@ -69,7 +70,7 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
-                                                                             document.getElementById('logout-form').submit();">
+                                                                                 document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -88,7 +89,7 @@
         <main class="">
             <div class="row">
                 <div class="col-md-2 p-0">
-                    <div class="card">
+                    <div class="card disp-height">
                         <div class="card-header">
                             タグ一覧
                         </div>
@@ -102,7 +103,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 p-0">
-                    <div class="card">
+                    <div class="card disp-height">
                         <div class="card-header d-flex justify-content-between">
                             メモ一覧
                             <a href="{{ route('home') }}"><i class="fa-solid fa-circle-plus"></i></i></a>

@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="card">
+    <div class="card disp-height">
         <div class="card-header d-flex justify-content-between me-3">
             メモ編集
             <form name="deleteForm" action="{{ route('delete') }}" method="POST">
