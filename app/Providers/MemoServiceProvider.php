@@ -39,7 +39,7 @@ class MemoServiceProvider extends ServiceProvider
             $view->with([
                 'memos' => $memos->get(),
                 'tags' => $tags->get(),
-                'memosPaginate' => $memos->simplePaginate($perPage = 10, $columns = ['*'], $pageName = 'memos'),
+                'memosPaginate' => $memos->simplePaginate($perPage = 11, $columns = ['*'], $pageName = 'memos'),
                 'tagsPaginate' => $tags->simplePaginate($perPage = 10, $columns = ['*'], $pageName = 'tags'),
                 'tagID' => $tagID,
             ]);
